@@ -23,7 +23,9 @@ namespace rassler.backend.infrastructure.Api.Utilities
                 { ResultCode.Success, HttpStatusCode.OK },
                 { ResultCode.Failed, HttpStatusCode.InternalServerError },
                 { ResultCode.UpdateFailed, HttpStatusCode.InternalServerError },
-                { ResultCode.UpdateSuccessful, HttpStatusCode.OK }
+                { ResultCode.UpdateSuccessful, HttpStatusCode.OK },
+                { ResultCode.Authorized, HttpStatusCode.OK },
+                { ResultCode.Unauthorized, HttpStatusCode.Unauthorized }
             };
         }
     }

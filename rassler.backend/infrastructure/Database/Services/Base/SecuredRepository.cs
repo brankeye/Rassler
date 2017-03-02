@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using rassler.backend.domain.Data.Enums;
 using rassler.backend.domain.Data.Interfaces;
-using rassler.backend.domain.Data.Models;
 using rassler.backend.infrastructure.Database.Interfaces;
 using rassler.backend.infrastructure.Database.Objects;
 
@@ -37,6 +35,52 @@ namespace rassler.backend.infrastructure.Database.Services.Base
         protected abstract bool CanDelete(object id);
 
         protected abstract Task<bool> CanDeleteAsync(object id);
+
+        public override DbResult<IEnumerable<TModel>> GetAll()
+        {
+            IQueryable<TModel> list;
+            if (CanGet(out list))
+            {
+                var collection = list.ToList();
+                return ListResult(collection, DbAction.Get);
+            }
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+        }
+
+        public override async Task<DbResult<IEnumerable<TModel>>> GetAllAsync()
+        {
+            IQueryable<TModel> list;
+            if (CanGet(out list))
+            {
+                var collection = await list.ToListAsync();
+                return ListResult(collection, DbAction.Get);
+            }
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+        }
+
+        public override DbResult<IEnumerable<TModel>> GetAllIncluding(params Expression<Func<TModel, object>>[] includeProperties)
+        {
+            IQueryable<TModel> list;
+            if (CanGet(out list))
+            {
+                list = includeProperties.Aggregate(list, (current, includeProperty) => current.Include(includeProperty));
+                var collection = list.ToList();
+                return ListResult(collection, DbAction.Get);
+            }
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+        }
+
+        public override async Task<DbResult<IEnumerable<TModel>>> GetAllIncludingAsync(params Expression<Func<TModel, object>>[] includeProperties)
+        {
+            IQueryable<TModel> list;
+            if (CanGet(out list))
+            {
+                list = includeProperties.Aggregate(list, (current, includeProperty) => current.Include(includeProperty));
+                var collection = await list.ToListAsync();
+                return ListResult(collection, DbAction.Get);
+            }
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+        }
 
         public override DbResult<IEnumerable<TModel>> GetAll(Expression<Func<TModel, bool>> predicate)
         {

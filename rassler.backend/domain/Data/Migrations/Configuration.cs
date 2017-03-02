@@ -1,5 +1,3 @@
-using rassler.backend.domain.Data.Enums;
-
 namespace rassler.backend.domain.Data.Migrations
 {
     using System.Data.Entity.Migrations;

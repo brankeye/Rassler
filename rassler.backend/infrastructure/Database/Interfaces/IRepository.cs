@@ -10,6 +10,14 @@ namespace rassler.backend.infrastructure.Database.Interfaces
     public interface IRepository<T> : IDisposable
         where T : class
     {
+        DbResult<IEnumerable<T>> GetAll();
+
+        Task<DbResult<IEnumerable<T>>> GetAllAsync();
+
+        DbResult<IEnumerable<T>> GetAllIncluding(params Expression<Func<T, object>>[] includeProperties);
+
+        Task<DbResult<IEnumerable<T>>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties);
+
         DbResult<IEnumerable<T>> GetAll(Expression<Func<T, bool>> predicate);
 
         Task<DbResult<IEnumerable<T>>> GetAllAsync(Expression<Func<T, bool>> predicate);

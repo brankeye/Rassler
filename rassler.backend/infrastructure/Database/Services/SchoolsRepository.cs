@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using rassler.backend.domain.Data.Models;
 using rassler.backend.infrastructure.Database.Services.Base;
@@ -12,7 +10,12 @@ namespace rassler.backend.infrastructure.Database.Services
     {
         protected override bool CanDelete(object id)
         {
-            throw new NotImplementedException();
+            var school = Context.Schools.Find(id);
+            if (school == null) return false;
+            var headInstructorLevel = (int) domain.Data.Enums.Standing.HeadInstructor;
+            var members = school.Members.Where(x => x.Standing.Level == headInstructorLevel);
+            var canDelete = members.Any(x => x.User.Username == Username);
+            return canDelete;
         }
 
         protected override Task<bool> CanDeleteAsync(object id)

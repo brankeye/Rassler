@@ -1,5 +1,4 @@
 ﻿using rassler.backend.domain.Data.Interfaces;
-using rassler.backend.infrastructure.Database.Services;
 using rassler.backend.infrastructure.Database.Services.Base;
 
 namespace rassler.backend.infrastructure.Database

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using rassler.backend.domain.Data.Models;
 using rassler.backend.infrastructure.Database.Services.Base;
@@ -12,37 +11,49 @@ namespace rassler.backend.infrastructure.Database.Services
     {
         protected override bool CanFind(User item)
         {
-            throw new NotImplementedException();
+            return item.Username == Username;
         }
 
         protected override Task<bool> CanFindAsync(User item)
         {
-            throw new NotImplementedException();
+            var result = item.Username == Username;
+            return Task.FromResult(result);
         }
 
         protected override bool CanGet(out IQueryable<User> list)
         {
-            throw new NotImplementedException();
+            var user = Context.Users.FirstOrDefault(x => x.Username == Username);
+            var users = new List<User>();
+            if (user != null)
+            {
+                users.Add(user);
+            }
+            list = new EnumerableQuery<User>(users);
+            return true;
         }
 
         protected override bool CanInsert(User item)
         {
-            throw new NotImplementedException();
+            var existingItem = Find(x => x.Username == item.Username);
+            var canInsert = existingItem == null && item.Username == Username;
+            return canInsert;
         }
 
-        protected override Task<bool> CanInsertAsync(User item)
+        protected override async Task<bool> CanInsertAsync(User item)
         {
-            throw new NotImplementedException();
+            var existingItem = await FindAsync(x => x.Username == item.Username);
+            var canInsert = existingItem == null && item.Username == Username;
+            return canInsert;
         }
 
         protected override bool CanDelete(object id)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         protected override Task<bool> CanDeleteAsync(object id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(false);
         }
     }
 }

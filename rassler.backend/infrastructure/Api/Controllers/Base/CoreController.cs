@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using rassler.backend.infrastructure.Api.Interfaces;
@@ -15,6 +16,12 @@ namespace rassler.backend.infrastructure.Api.Controllers.Base
         {
             var statusCode = GetStatusCodeParser().GetStatusCode(result.ResultCode);
             var response = Request.CreateResponse(statusCode, result.Content);
+            return ResponseMessage(response);
+        }
+
+        protected IHttpActionResult GetResponse(HttpStatusCode statusCode)
+        {
+            var response = Request.CreateResponse(statusCode);
             return ResponseMessage(response);
         }
 

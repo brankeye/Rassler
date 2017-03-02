@@ -19,6 +19,34 @@ namespace rassler.backend.infrastructure.Database.Services.Base
     {
         public TContext Context { get; set; } = new TContext();
 
+        public virtual DbResult<IEnumerable<TModel>> GetAll()
+        {
+            var resultCode = ResultCode.Success;
+            var query = Context.Set<TModel>().ToList();
+            return new DbResult<IEnumerable<TModel>>(resultCode, query);
+        }
+
+        public virtual async Task<DbResult<IEnumerable<TModel>>> GetAllAsync()
+        {
+            var query = await Context.Set<TModel>().ToListAsync();
+            return ListResult(query, DbAction.Get);
+        }
+
+        public virtual DbResult<IEnumerable<TModel>> GetAllIncluding(params Expression<Func<TModel, object>>[] includeProperties)
+        {
+            var query = Context.Set<TModel>().AsQueryable();
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            return ListResult(query, DbAction.Get);
+        }
+
+        public virtual async Task<DbResult<IEnumerable<TModel>>> GetAllIncludingAsync(params Expression<Func<TModel, object>>[] includeProperties)
+        {
+            var query = Context.Set<TModel>().AsQueryable();
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            IEnumerable<TModel> list = await query.ToListAsync();
+            return ListResult(list, DbAction.Get);
+        }
+
         public virtual DbResult<IEnumerable<TModel>> GetAll(Expression<Func<TModel, bool>> predicate)
         {
             var resultCode = ResultCode.Success;
