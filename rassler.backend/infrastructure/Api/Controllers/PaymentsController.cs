@@ -10,18 +10,18 @@ namespace rassler.backend.infrastructure.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            var paymentsRepository = GetSecuredRepository<Payment>();
-            var payments = await paymentsRepository.GetAllAsync();
-            var response = GetResponse(payments);
+            var repository = GetSecuredRepository<Payment>();
+            var entities = await repository.GetAllAsync();
+            var response = GetResponse(entities);
             return response;
         }
 
         [HttpGet]
         public async Task<IHttpActionResult> Get(long id)
         {
-            var paymentsRepository = GetSecuredRepository<Payment>();
-            var payment = await paymentsRepository.FindAsync(id);
-            var response = GetResponse(payment);
+            var repository = GetSecuredRepository<Payment>();
+            var entity = await repository.FindAsync(id);
+            var response = GetResponse(entity);
             return response;
         }
 
@@ -30,9 +30,9 @@ namespace rassler.backend.infrastructure.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var paymentsRepository = GetSecuredRepository<Payment>();
-                var updatedPayment = await paymentsRepository.InsertOrUpdateAsync(entity);
-                var response = GetResponse(updatedPayment);
+                var repository = GetSecuredRepository<Payment>();
+                var updatedEntity = await repository.InsertOrUpdateAsync(entity);
+                var response = GetResponse(updatedEntity);
                 return response;
             }
             return BadRequest();
@@ -41,9 +41,9 @@ namespace rassler.backend.infrastructure.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Delete(long id)
         {
-            var paymentsRepository = GetSecuredRepository<Payment>();
-            var deletedPayment = await paymentsRepository.DeleteAsync(id);
-            var response = GetResponse(deletedPayment);
+            var repository = GetSecuredRepository<Payment>();
+            var deletedEntity = await repository.DeleteAsync(id);
+            var response = GetResponse(deletedEntity);
             return response;
         }
     }
