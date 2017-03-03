@@ -82,6 +82,16 @@
     <Compile Include="Models\CanceledClass.cs" />
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\ContactInfo.cs" />
+    <Compile Include="DTOs\AttendanceRecord.cs" />
+    <Compile Include="DTOs\Base\Entity.cs" />
+    <Compile Include="DTOs\CanceledClass.cs" />
+    <Compile Include="DTOs\Class.cs" />
+    <Compile Include="DTOs\ContactInfo.cs" />
+    <Compile Include="DTOs\Payment.cs" />
+    <Compile Include="DTOs\Profile.cs" />
+    <Compile Include="DTOs\Rank.cs" />
+    <Compile Include="DTOs\School.cs" />
+    <Compile Include="DTOs\User.cs" />
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\School.cs" />

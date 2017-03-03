@@ -44,7 +44,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = list.ToList();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<IEnumerable<TModel>>> GetAllAsync()
@@ -55,7 +55,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = await list.ToListAsync();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<IEnumerable<TModel>> GetAllIncluding(params Expression<Func<TModel, object>>[] includeProperties)
@@ -67,7 +67,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = list.ToList();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<IEnumerable<TModel>>> GetAllIncludingAsync(params Expression<Func<TModel, object>>[] includeProperties)
@@ -79,7 +79,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = await list.ToListAsync();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<IEnumerable<TModel>> GetAll(Expression<Func<TModel, bool>> predicate)
@@ -90,7 +90,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = list.Where(predicate).ToList();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<IEnumerable<TModel>>> GetAllAsync(Expression<Func<TModel, bool>> predicate)
@@ -101,7 +101,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = await list.Where(predicate).ToListAsync();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<IEnumerable<TModel>> GetAllIncluding(Expression<Func<TModel, bool>> predicate, params Expression<Func<TModel, object>>[] includeProperties)
@@ -114,7 +114,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = list.Where(predicate).ToList();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<IEnumerable<TModel>>> GetAllIncludingAsync(Expression<Func<TModel, bool>> predicate, params Expression<Func<TModel, object>>[] includeProperties)
@@ -127,7 +127,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
                 var collection = await list.Where(predicate).ToListAsync();
                 return ListResult(collection, DbAction.Get);
             }
-            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized);
+            return new DbResult<IEnumerable<TModel>>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<TModel> Find(object id)
@@ -137,7 +137,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return result;
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<TModel>> FindAsync(object id)
@@ -148,7 +148,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return result;
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<TModel> Find(Expression<Func<TModel, bool>> predicate)
@@ -159,7 +159,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return result;
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<TModel>> FindAsync(Expression<Func<TModel, bool>> predicate)
@@ -170,7 +170,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return result;
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<TModel> InsertOrUpdate(TModel current)
@@ -179,7 +179,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return base.InsertOrUpdate(current);
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<TModel>> InsertOrUpdateAsync(TModel current)
@@ -188,7 +188,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return await base.InsertOrUpdateAsync(current);
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override DbResult<TModel> Delete(object id)
@@ -197,7 +197,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return base.Delete(id);
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
 
         public override async Task<DbResult<TModel>> DeleteAsync(object id)
@@ -206,7 +206,7 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             {
                 return await base.DeleteAsync(id);
             }
-            return new DbResult<TModel>(ResultCode.Unauthorized);
+            return new DbResult<TModel>(ResultCode.Unauthorized, null);
         }
     }
 }

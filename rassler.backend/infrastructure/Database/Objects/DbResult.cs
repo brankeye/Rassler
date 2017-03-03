@@ -3,9 +3,8 @@
 namespace rassler.backend.infrastructure.Database.Objects
 {
     public class DbResult<T>
-        where T : class
     {
-        public DbResult(ResultCode resultCode, T item = null)
+        public DbResult(ResultCode resultCode, T item)
         {
             ResultCode = resultCode;
             Content = item;

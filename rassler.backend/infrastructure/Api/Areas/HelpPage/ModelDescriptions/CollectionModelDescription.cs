@@ -1,4 +1,6 @@
-namespace Api.Areas.HelpPage.ModelDescriptions
+using Api.Areas.HelpPage.ModelDescriptions;
+
+namespace rassler.backend.domain.Data.ModelDescriptions
 {
     public class CollectionModelDescription : ModelDescription
     {
