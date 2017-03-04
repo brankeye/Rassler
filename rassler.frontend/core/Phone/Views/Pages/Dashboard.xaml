@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="rassler.frontend.core.Phone.Views.Pages.Dashboard"
+             Title="Dashboard">
+  <MasterDetailPage.Master>
+    <ContentPage Title="Required">
+      <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand">
+          <StackLayout Padding="20, 40, 20, 20">
+            <Label Text="{Binding ProfileModel.FullName}" Style="{DynamicResource PrimaryHeaderStyle}"></Label>
+            <Label Text="your profile" Style="{DynamicResource SecondaryTextStyle}"></Label>
+          </StackLayout>
+          <ListView x:Name="MasterListView" HasUnevenRows="True" ItemsSource="{Binding NavigationList}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" VerticalOptions="FillAndExpand">
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <ContentView Padding="15,8,15,8" HorizontalOptions="FillAndExpand">
+                    <Label Text="{Binding Title}" Style="{DynamicResource PrimaryTextStyle}" />
+                  </ContentView>
+                </ViewCell>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+          <Button Text="Signout" Command="{Binding SignoutCommand}" HorizontalOptions="FillAndExpand" VerticalOptions="End"></Button>
+        </StackLayout>
+      </ContentPage.Content>
+    </ContentPage>
+  </MasterDetailPage.Master>
+</MasterDetailPage>
