@@ -2,44 +2,49 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using rassler.backend.domain.Data.Models;
-using rassler.backend.domain.Data.Models.Base;
+using AutoMapper;
+using rassler.backend.domain.Model;
 using rassler.backend.infrastructure.Api.Controllers.Base;
+using rassler.backend.infrastructure.Api.Interfaces;
+using rassler.backend.infrastructure.Database.Interfaces;
 
 namespace rassler.backend.infrastructure.Api.Controllers
 {
-    public class ProfilesController : CoreController<Profile>
+    public class ProfilesController : CoreController<domain.Model.Profile>
     {
+        public ProfilesController(IUnitOfWork unitOfWork, IMapper mapper, IHttpStatusCodeParser parser)
+            : base(mapper, parser)
+        {
+            UnitOfWork = unitOfWork;
+        }
+
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<Profile>))]
+        [ResponseType(typeof(IEnumerable<domain.Model.Profile>))]
         public async Task<IHttpActionResult> Get()
         {
-            var repository = GetSecuredRepository<Profile>();
-            var entities = await repository.GetAllAsync();
+            var entities = await UnitOfWork.Profiles.GetAllAsync();
             var response = GetResponse(entities);
             return response;
         }
 
         [HttpGet]
-        [ResponseType(typeof(Profile))]
+        [ResponseType(typeof(domain.Model.Profile))]
         public async Task<IHttpActionResult> Get(long id)
         {
-            var repository = GetSecuredRepository<Profile>();
-            var entity = await repository.FindAsync(id);
+            var entity = await UnitOfWork.Profiles.FindAsync(id);
             var response = GetResponse(entity);
             return response;
         }
 
         [HttpPost]
         [ResponseType(typeof(Entity))]
-        public async Task<IHttpActionResult> Post([FromBody] domain.Data.Models.DTOs.Profile entity)
+        public async Task<IHttpActionResult> Post([FromBody] domain.DTO.Profile entity)
         {
             if (ModelState.IsValid)
             {
-                var repository = GetSecuredRepository<Profile>();
-                var mapper = GetMapper();
-                var mappedEntity = mapper.Map<domain.Data.Models.Profile>(entity);
-                var updatedEntity = await repository.InsertOrUpdateAsync(mappedEntity);
+                var mappedEntity = Mapper.Map<domain.Model.Profile>(entity);
+                var updatedEntity = await UnitOfWork.Profiles.InsertOrUpdateAsync(mappedEntity);
+                await UnitOfWork.CommitAsync();
                 var response = GetResponse(updatedEntity.ResultCode, (Entity) updatedEntity.Content);
                 return response;
             }
@@ -49,8 +54,8 @@ namespace rassler.backend.infrastructure.Api.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete(long id)
         {
-            var repository = GetSecuredRepository<Profile>();
-            var deletedEntity = await repository.DeleteAsync(id);
+            var deletedEntity = await UnitOfWork.Profiles.DeleteAsync(id);
+            await UnitOfWork.CommitAsync();
             var response = GetResponse(deletedEntity.ResultCode);
             return response;
         }

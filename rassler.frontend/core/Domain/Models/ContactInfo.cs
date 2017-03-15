@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using rassler.frontend.core.Domain.Interfaces;
 using Realms;
@@ -27,7 +28,8 @@ namespace rassler.frontend.core.Domain.Models
         [DataMember]
         public string PhoneNumber { get; set; }
 
-        public Profile Profile { get; set; }
+        [Backlink(nameof(Domain.Models.Profile.ContactInfo))]
+        public IQueryable<Profile> Profile { get; }
 
         public DateTimeOffset? DateCreated { get; set; }
 

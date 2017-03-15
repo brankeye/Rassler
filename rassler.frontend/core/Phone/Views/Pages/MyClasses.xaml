@@ -1,7 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:rassler.frontend.core.Domain.Utilities.Converters;assembly=Domain"
              x:Class="rassler.frontend.core.Phone.Views.Pages.MyClasses"
              Title="My classes">
-  <Label Text="{Binding MainText}" VerticalOptions="Center" HorizontalOptions="Center" />
+  <ContentPage.Content>
+    <StackLayout>
+      <ListView ItemsSource="{Binding Classes}" Header="{Binding .}" HasUnevenRows="True"
+                IsPullToRefreshEnabled="False">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <ViewCell>
+              <StackLayout Padding="15,8,15,8">
+                <StackLayout Orientation="Horizontal">
+                  <Label Text="{Binding Name}" Style="{DynamicResource PrimaryTextStyle}" />
+                  <Label Text="(Canceled)" IsVisible="{Binding IsCanceled}"
+                         Style="{DynamicResource PrimaryTextStyle}" />
+                </StackLayout>
+                <Label
+                  Text="{Binding DateTime, Converter={x:StaticResource ToDateTime}, StringFormat='{0:dddd, MMMM d, yyyy}'}"
+                  Style="{DynamicResource SecondaryTextStyle}" />
+              </StackLayout>
+            </ViewCell>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.HeaderTemplate>
+          <DataTemplate>
+            <ContentView Padding="15">
+              <DatePicker Format="dddd, MMMM d, yyyy"
+                          Date="{Binding SelectedDate, Mode=OneWayToSource, Converter={x:StaticResource ToDateTime}}"
+                          VerticalOptions="Center" />
+            </ContentView>
+          </DataTemplate>
+        </ListView.HeaderTemplate>
+      </ListView>
+    </StackLayout>
+  </ContentPage.Content>
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <converters:ToDateTime x:Key="ToDateTime" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
 </ContentPage>

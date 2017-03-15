@@ -187,6 +187,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -324,6 +325,14 @@
     <ProjectReference Include="..\..\domain\Data\Data.csproj">
       <Project>{e5d93237-caf6-42e9-8cfb-7534ecf1aa8e}</Project>
       <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\domain\DTO\DTO.csproj">
+      <Project>{8091a890-af74-4167-87e8-379b04c89eea}</Project>
+      <Name>DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\domain\Model\Model.csproj">
+      <Project>{2b3abf48-c4ee-4465-830c-c9e16f8c63d6}</Project>
+      <Name>Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Database\Database.csproj">
       <Project>{af2979bb-9a3e-4074-a58e-34836e42a560}</Project>

@@ -23,6 +23,9 @@ namespace rassler.frontend.core.Domain.Models
         public bool IsActive { get; set; }
 
         [DataMember]
+        public bool IsOfflineProfile { get; set; }
+
+        [DataMember]
         public long ContactInfoId { get; set; }
 
         [DataMember]
@@ -33,6 +36,8 @@ namespace rassler.frontend.core.Domain.Models
 
         [DataMember]
         public long SchoolId { get; set; }
+
+        public ContactInfo ContactInfo { get; set; }
 
         public User User { get; set; }
 

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using rassler.backend.domain.Data.Enums;
+using rassler.backend.domain.Model.Interfaces;
 using rassler.backend.infrastructure.Database.Objects;
 
 namespace rassler.backend.infrastructure.Database.Interfaces
 {
     public interface IRepository<T> : IDisposable
-        where T : class
+        where T : class, IEntity
     {
         DbResult<IEnumerable<T>> GetAll();
 

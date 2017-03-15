@@ -20,13 +20,10 @@ namespace rassler.frontend.core.Domain.Models
         public string Name { get; set; }
 
         [DataMember]
-        public string Day { get; set; }
+        public DateTimeOffset DateTime { get; set; }
 
         [DataMember]
-        public DateTimeOffset StartTime { get; set; }
-
-        [DataMember]
-        public DateTimeOffset EndTime { get; set; }
+        public double Minutes { get; set; }
 
         [DataMember]
         public long SchoolId { get; set; }

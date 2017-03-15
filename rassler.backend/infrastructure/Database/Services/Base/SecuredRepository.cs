@@ -5,17 +5,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using rassler.backend.domain.Data.Enums;
-using rassler.backend.domain.Data.Interfaces;
+using rassler.backend.domain.Model.Interfaces;
 using rassler.backend.infrastructure.Database.Interfaces;
 using rassler.backend.infrastructure.Database.Objects;
 
 namespace rassler.backend.infrastructure.Database.Services.Base
 {
-    public abstract class SecuredRepository<TContext, TModel> : Repository<TContext, TModel>, ISecuredRepository<TModel>
-        where TContext : DbContext, new()
+    public abstract class SecuredRepository<TModel> : Repository<TModel>, ISecuredRepository<TModel>
         where TModel : class, IEntity
     {
         protected string Username { get; set; }
+
+        protected SecuredRepository(DbContext context) : base(context)
+        {
+            
+        }
 
         public void Initialize(string username)
         {

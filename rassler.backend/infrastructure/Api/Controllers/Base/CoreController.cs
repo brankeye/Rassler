@@ -13,6 +13,18 @@ namespace rassler.backend.infrastructure.Api.Controllers.Base
     public class CoreController<T> : ApiController
         where T : class
     {
+        protected IUnitOfWork UnitOfWork { get; set; }
+
+        protected IMapper Mapper { get; set; }
+
+        protected IHttpStatusCodeParser StatusCodeParser { get; set; }
+
+        public CoreController(IMapper mapper, IHttpStatusCodeParser parser)
+        {
+            Mapper = mapper;
+            StatusCodeParser = parser;
+        }
+
         protected IHttpActionResult GetResponse<TModel>(DbResult<TModel> result)
         {
             return GetResponse(result.ResultCode, result.Content);
@@ -20,14 +32,14 @@ namespace rassler.backend.infrastructure.Api.Controllers.Base
 
         protected IHttpActionResult GetResponse(ResultCode resultCode)
         {
-            var statusCode = GetStatusCodeParser().GetStatusCode(resultCode);
+            var statusCode = StatusCodeParser.GetStatusCode(resultCode);
             var response = Request.CreateResponse(statusCode);
             return ResponseMessage(response);
         }
 
         protected IHttpActionResult GetResponse<TModel>(ResultCode resultCode, TModel content)
         {
-            var statusCode = GetStatusCodeParser().GetStatusCode(resultCode);
+            var statusCode = StatusCodeParser.GetStatusCode(resultCode);
             var response = Request.CreateResponse(statusCode, content);
             return ResponseMessage(response);
         }
@@ -36,30 +48,6 @@ namespace rassler.backend.infrastructure.Api.Controllers.Base
         {
             var response = Request.CreateResponse(statusCode);
             return ResponseMessage(response);
-        }
-
-        protected ISecuredRepository<TModel> GetSecuredRepository<TModel>()
-            where TModel : class
-        {
-            var repository = (ISecuredRepository<TModel>)Request.GetDependencyScope().GetService(typeof(ISecuredRepository<TModel>));
-            repository.Initialize(GetUsername());
-            return repository;
-        }
-
-        protected IRepository<TModel> GetRepository<TModel>()
-            where TModel : class
-        {
-            return (IRepository<TModel>)Request.GetDependencyScope().GetService(typeof(IRepository<TModel>));
-        }
-
-        protected IHttpStatusCodeParser GetStatusCodeParser()
-        {
-            return (IHttpStatusCodeParser)Request.GetDependencyScope().GetService(typeof(IHttpStatusCodeParser));
-        }
-
-        protected IMapper GetMapper()
-        {
-            return (IMapper)Request.GetDependencyScope().GetService(typeof(IMapper));
         }
 
         protected string GetUsername()

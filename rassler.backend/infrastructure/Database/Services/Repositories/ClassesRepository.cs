@@ -1,0 +1,53 @@
+﻿using System;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+using rassler.backend.domain.Model;
+using rassler.backend.infrastructure.Database.Interfaces.Repositories;
+using rassler.backend.infrastructure.Database.Services.Base;
+
+namespace rassler.backend.infrastructure.Database.Services.Repositories
+{
+    public class ClassesRepository : SecuredRepository<Class>, IClassesRepository
+    {
+        public ClassesRepository(DbContext context) : base(context)
+        {
+
+        }
+
+        protected override bool CanFind(Class item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<bool> CanFindAsync(Class item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool CanGet(out IQueryable<Class> list)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool CanInsert(Class item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<bool> CanInsertAsync(Class item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool CanDelete(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<bool> CanDeleteAsync(object id)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

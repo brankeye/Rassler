@@ -2,7 +2,8 @@
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Threading.Tasks;
-using rassler.backend.domain.Data.Interfaces;
+using rassler.backend.domain.Data.Configurations;
+using rassler.backend.domain.Model.Interfaces;
 
 namespace rassler.backend.domain.Data
 {
@@ -16,6 +17,17 @@ namespace rassler.backend.domain.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+            modelBuilder.Properties<string>().Configure(x => x.HasMaxLength(200));
+
+            modelBuilder.Configurations.Add(new AttendanceRecordConfiguration());
+            modelBuilder.Configurations.Add(new CanceledClassConfiguration());
+            modelBuilder.Configurations.Add(new ClassConfiguration());
+            modelBuilder.Configurations.Add(new PaymentConfiguration());
+            modelBuilder.Configurations.Add(new ProfileConfiguration());
+            modelBuilder.Configurations.Add(new RankConfiguration());
+            modelBuilder.Configurations.Add(new SchoolConfiguration());
+            modelBuilder.Configurations.Add(new UserConfiguration());
         }
 
         public override int SaveChanges()
@@ -51,24 +63,24 @@ namespace rassler.backend.domain.Data
             }
         }
 
-        public DbSet<Models.User> Users { get; set; }
+        public DbSet<Model.User> Users { get; set; }
 
-        public DbSet<Models.AttendanceRecord> AttendanceRecords { get; set; }
+        public DbSet<Model.AttendanceRecord> AttendanceRecords { get; set; }
 
-        public DbSet<Models.CanceledClass> CanceledClasses { get; set; }
+        public DbSet<Model.CanceledClass> CanceledClasses { get; set; }
 
-        public DbSet<Models.Class> Classes { get; set; }
+        public DbSet<Model.Class> Classes { get; set; }
 
-        public DbSet<Models.Profile> Profiles { get; set; }
+        public DbSet<Model.Profile> Profiles { get; set; }
 
-        public DbSet<Models.School> Schools { get; set; }
+        public DbSet<Model.School> Schools { get; set; }
 
-        public DbSet<Models.Payment> Payments { get; set; }
+        public DbSet<Model.Payment> Payments { get; set; }
 
-        public DbSet<Models.Standing> Standings { get; set; }
+        public DbSet<Model.Standing> Standings { get; set; }
 
-        public DbSet<Models.Rank> Ranks { get; set; }
+        public DbSet<Model.Rank> Ranks { get; set; }
 
-        public DbSet<Models.ContactInfo> ContactInfos { get; set; }
+        public DbSet<Model.ContactInfo> ContactInfos { get; set; }
     }
 }

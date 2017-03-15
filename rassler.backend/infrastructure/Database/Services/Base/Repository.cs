@@ -7,41 +7,48 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using rassler.backend.domain.Data.Enums;
-using rassler.backend.domain.Data.Interfaces;
+using rassler.backend.domain.Model.Interfaces;
 using rassler.backend.infrastructure.Database.Interfaces;
 using rassler.backend.infrastructure.Database.Objects;
 
 namespace rassler.backend.infrastructure.Database.Services.Base
 {
-    public abstract class Repository<TContext, TModel> : IRepository<TModel>
-        where TContext : DbContext, new()
+    public class Repository<TModel> : IRepository<TModel>
         where TModel : class, IEntity
     {
-        public TContext Context { get; set; } = new TContext();
+        protected DbContext Context { get; set; }
+
+        protected DbSet<TModel> Set { get; set; }
+
+        public Repository(DbContext context)
+        {
+            Context = context;
+            Set = Context.Set<TModel>();
+        }
 
         public virtual DbResult<IEnumerable<TModel>> GetAll()
         {
             var resultCode = ResultCode.Success;
-            var query = Context.Set<TModel>().ToList();
+            var query = Set.ToList();
             return new DbResult<IEnumerable<TModel>>(resultCode, query);
         }
 
         public virtual async Task<DbResult<IEnumerable<TModel>>> GetAllAsync()
         {
-            var query = await Context.Set<TModel>().ToListAsync();
+            var query = await Set.ToListAsync();
             return ListResult(query, DbAction.Get);
         }
 
         public virtual DbResult<IEnumerable<TModel>> GetAllIncluding(params Expression<Func<TModel, object>>[] includeProperties)
         {
-            var query = Context.Set<TModel>().AsQueryable();
+            var query = Set.AsQueryable();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
             return ListResult(query, DbAction.Get);
         }
 
         public virtual async Task<DbResult<IEnumerable<TModel>>> GetAllIncludingAsync(params Expression<Func<TModel, object>>[] includeProperties)
         {
-            var query = Context.Set<TModel>().AsQueryable();
+            var query = Set.AsQueryable();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
             IEnumerable<TModel> list = await query.ToListAsync();
             return ListResult(list, DbAction.Get);
@@ -50,26 +57,26 @@ namespace rassler.backend.infrastructure.Database.Services.Base
         public virtual DbResult<IEnumerable<TModel>> GetAll(Expression<Func<TModel, bool>> predicate)
         {
             var resultCode = ResultCode.Success;
-            var query = Context.Set<TModel>().Where(predicate);
+            var query = Set.Where(predicate);
             return new DbResult<IEnumerable<TModel>>(resultCode, query);
         }
 
         public virtual async Task<DbResult<IEnumerable<TModel>>> GetAllAsync(Expression<Func<TModel, bool>> predicate)
         {
-            var query = await Context.Set<TModel>().Where(predicate).ToListAsync();
+            var query = await Set.Where(predicate).ToListAsync();
             return ListResult(query, DbAction.Get);
         }
 
         public virtual DbResult<IEnumerable<TModel>> GetAllIncluding(Expression<Func<TModel, bool>> predicate, params Expression<Func<TModel, object>>[] includeProperties)
         {
-            var query = Context.Set<TModel>().Where(predicate);
+            var query = Set.Where(predicate);
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
             return ListResult(query, DbAction.Get);
         }
 
         public virtual async Task<DbResult<IEnumerable<TModel>>> GetAllIncludingAsync(Expression<Func<TModel, bool>> predicate, params Expression<Func<TModel, object>>[] includeProperties)
         {
-            var query = Context.Set<TModel>().Where(predicate);
+            var query = Set.Where(predicate);
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
             IEnumerable<TModel> list = await query.ToListAsync();
             return ListResult(list, DbAction.Get);
@@ -77,25 +84,25 @@ namespace rassler.backend.infrastructure.Database.Services.Base
 
         public virtual DbResult<TModel> Find(Expression<Func<TModel, bool>> predicate)
         {
-            var entity = Context.Set<TModel>().FirstOrDefault(predicate);
+            var entity = Set.FirstOrDefault(predicate);
             return Result(entity, DbAction.Get);
         }
 
         public virtual async Task<DbResult<TModel>> FindAsync(Expression<Func<TModel, bool>> predicate)
         {
-            var entity = await Context.Set<TModel>().FirstOrDefaultAsync(predicate);
+            var entity = await Set.FirstOrDefaultAsync(predicate);
             return Result(entity, DbAction.Get);
         }
 
         public virtual DbResult<TModel> Find(object id)
         {
-            var entity = Context.Set<TModel>().Find(id);
+            var entity = Set.Find(id);
             return Result(entity, DbAction.Get);
         }
 
         public virtual async Task<DbResult<TModel>> FindAsync(object id)
         {
-            var entity = await Context.Set<TModel>().FindAsync(id);
+            var entity = await Set.FindAsync(id);
             return Result(entity, DbAction.Get);
         }
 
@@ -104,22 +111,17 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             TModel original = null;
             if (current.Id > 0)
             {
-                original = Context.Set<TModel>().Find(current.Id);
+                original = Set.Find(current.Id);
                 Context.Entry(original).CurrentValues.SetValues(current);
             }
             else
             {
-                Context.Set<TModel>().Add(current);
+                Set.Add(current);
             }
 
-            TModel entity = null;
-            var saveResult = Save();
-            if (saveResult == ResultCode.SaveFailed)
-            {
-                return Result(null, DbAction.General);
-            }
-            entity = original == null ? Context.Entry(current).Entity
-                                          : Context.Entry(original).Entity;
+            var entity = original == null 
+                ? Context.Entry(current).Entity
+                : Context.Entry(original).Entity;
             return Result(entity, DbAction.Insert);
         }
 
@@ -138,54 +140,39 @@ namespace rassler.backend.infrastructure.Database.Services.Base
             }
             else
             {
-                Context.Set<TModel>().Add(current);
+                Set.Add(current);
             }
 
-            TModel entity = null;
-            var saveResult = await SaveAsync();
-            if (saveResult == ResultCode.SaveFailed)
-            {
-                return Result(null, DbAction.General);
-            }
-            entity = original == null ? Context.Entry(current).Entity
-                                          : Context.Entry(original).Entity;
+            var entity = original == null 
+                ? Context.Entry(current).Entity
+                : Context.Entry(original).Entity;
             return Result(entity, DbAction.Insert);
         }
 
         public virtual DbResult<TModel> Delete(object id)
         {
-            var entity = Context.Set<TModel>().Find(id);
+            var entity = Set.Find(id);
             if (entity != null)
             {
                 if (Context.Entry(entity).State == EntityState.Detached)
                 {
-                    Context.Set<TModel>().Attach(entity);
+                    Set.Attach(entity);
                 }
-                Context.Set<TModel>().Remove(entity);
-                var saveResult = Save();
-                if (saveResult == ResultCode.SaveFailed)
-                {
-                    return Result(null, DbAction.General);
-                }
+                Set.Remove(entity);
             }
             return Result(entity, DbAction.Delete);
         }
 
         public virtual async Task<DbResult<TModel>> DeleteAsync(object id)
         {
-            var entity = await Context.Set<TModel>().FindAsync(id);
+            var entity = await Set.FindAsync(id);
             if (entity != null)
             {
                 if (Context.Entry(entity).State == EntityState.Detached)
                 {
-                    Context.Set<TModel>().Attach(entity);
+                    Set.Attach(entity);
                 }
-                Context.Set<TModel>().Remove(entity);
-                var saveResult = await SaveAsync();
-                if (saveResult == ResultCode.SaveFailed)
-                {
-                    return Result(null, DbAction.General);
-                }
+                Set.Remove(entity);
             }
             return Result(entity, DbAction.Delete);
         }

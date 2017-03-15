@@ -1,35 +1,40 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using rassler.backend.domain.Data.Interfaces;
-using rassler.backend.domain.Data.Models;
-using rassler.backend.domain.Data.Models.Base;
+using AutoMapper;
+using rassler.backend.domain.Model;
 using rassler.backend.infrastructure.Api.Controllers.Base;
+using rassler.backend.infrastructure.Api.Interfaces;
+using rassler.backend.infrastructure.Database.Interfaces;
 
 namespace rassler.backend.infrastructure.Api.Controllers
 {
     public class UsersController : CoreController<User>
     {
+        public UsersController(IUnitOfWork unitOfWork, IMapper mapper, IHttpStatusCodeParser parser)
+            : base(mapper, parser)
+        {
+            UnitOfWork = unitOfWork;
+        }
+
         [HttpGet]
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> Get(long id)
         {
-            var usersRepository = GetSecuredRepository<User>();
-            var users = await usersRepository.FindAsync(id);
+            var users = await UnitOfWork.Users.FindAsync(id);
             var response = GetResponse(users);
             return response;
         }
 
         [HttpPost]
         [ResponseType(typeof(Entity))]
-        public async Task<IHttpActionResult> Post([FromBody] domain.Data.Models.DTOs.User entity)
+        public async Task<IHttpActionResult> Post([FromBody] domain.DTO.User entity)
         {
             if (ModelState.IsValid)
             {
-                var repository = GetSecuredRepository<User>();
-                var mapper = GetMapper();
-                var mappedEntity = mapper.Map<domain.Data.Models.User>(entity);
-                var updatedEntity = await repository.InsertOrUpdateAsync(mappedEntity);
+                var mappedEntity = Mapper.Map<domain.Model.User>(entity);
+                var updatedEntity = await UnitOfWork.Users.InsertOrUpdateAsync(mappedEntity);
+                await UnitOfWork.CommitAsync();
                 var response = GetResponse(updatedEntity.ResultCode, (Entity) updatedEntity.Content );
                 return response;
             }

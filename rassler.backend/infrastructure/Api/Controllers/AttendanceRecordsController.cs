@@ -2,20 +2,27 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using rassler.backend.domain.Data.Models;
-using rassler.backend.domain.Data.Models.Base;
+using AutoMapper;
+using rassler.backend.domain.Model;
 using rassler.backend.infrastructure.Api.Controllers.Base;
+using rassler.backend.infrastructure.Api.Interfaces;
+using rassler.backend.infrastructure.Database.Interfaces;
 
 namespace rassler.backend.infrastructure.Api.Controllers
 {
     public class AttendanceRecordsController : CoreController<AttendanceRecord>
     {
+        public AttendanceRecordsController(IUnitOfWork unitOfWork, IMapper mapper, IHttpStatusCodeParser parser)
+            : base(mapper, parser)
+        {
+            UnitOfWork = unitOfWork;
+        }
+
         [HttpGet]
         [ResponseType(typeof(IEnumerable<AttendanceRecord>))]
         public async Task<IHttpActionResult> Get()
         {
-            var repository = GetSecuredRepository<AttendanceRecord>();
-            var entities = await repository.GetAllAsync();
+            var entities = await UnitOfWork.AttendanceRecords.GetAllAsync();
             var response = GetResponse(entities);
             return response;
         }
@@ -24,22 +31,20 @@ namespace rassler.backend.infrastructure.Api.Controllers
         [ResponseType(typeof(AttendanceRecord))]
         public async Task<IHttpActionResult> Get(long id)
         {
-            var repository = GetSecuredRepository<AttendanceRecord>();
-            var entity = await repository.FindAsync(id);
+            var entity = await UnitOfWork.AttendanceRecords.FindAsync(id);
             var response = GetResponse(entity);
             return response;
         }
 
         [HttpPost]
         [ResponseType(typeof(Entity))]
-        public async Task<IHttpActionResult> Post([FromBody] domain.Data.DTOs.AttendanceRecord entity)
+        public async Task<IHttpActionResult> Post([FromBody] domain.DTO.AttendanceRecord entity)
         {
             if (ModelState.IsValid)
             {
-                var repository = GetSecuredRepository<AttendanceRecord>();
-                var mapper = GetMapper();
-                var mappedEntity = mapper.Map<domain.Data.Models.AttendanceRecord>(entity);
-                var updatedEntity = await repository.InsertOrUpdateAsync(mappedEntity);
+                var mappedEntity = Mapper.Map<domain.Model.AttendanceRecord>(entity);
+                var updatedEntity = await UnitOfWork.AttendanceRecords.InsertOrUpdateAsync(mappedEntity);
+                await UnitOfWork.CommitAsync();
                 var response = GetResponse(updatedEntity.ResultCode, (Entity) updatedEntity.Content);
                 return response;
             }
@@ -49,8 +54,8 @@ namespace rassler.backend.infrastructure.Api.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete(long id)
         {
-            var repository = GetSecuredRepository<AttendanceRecord>();
-            var deletedEntity = await repository.DeleteAsync(id);
+            var deletedEntity = await UnitOfWork.AttendanceRecords.DeleteAsync(id);
+            await UnitOfWork.CommitAsync();
             var response = GetResponse(deletedEntity.ResultCode);
             return response;
         }

@@ -52,33 +52,52 @@
   <ItemGroup>
     <Compile Include="Context.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IRepositoryProvider.cs" />
     <Compile Include="Interfaces\ISecuredRespository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Interfaces\Repositories\IAttendanceRecordsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ICanceledClassesRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IContactInfosRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IClassesRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IUsersRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IStandingsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IRanksRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IPaymentsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ISchoolsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IProfilesRepository.cs" />
     <Compile Include="Objects\DbResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
     <Compile Include="Services\Base\SecuredRepository.cs" />
     <Compile Include="Services\Base\Repository.cs" />
-    <Compile Include="Services\CanceledClassesRepository.cs" />
-    <Compile Include="Services\StandingsRepository.cs" />
-    <Compile Include="Services\ContactInfosRepository.cs" />
-    <Compile Include="Services\PaymentsRepository.cs" />
-    <Compile Include="Services\RanksRepository.cs" />
-    <Compile Include="Services\AttendanceRecordsRepository.cs" />
-    <Compile Include="Services\SchoolsRepository.cs" />
-    <Compile Include="Services\ClassesRepository.cs" />
-    <Compile Include="Services\ProfilesRepository.cs" />
-    <Compile Include="Services\UsersRepository.cs" />
+    <Compile Include="Services\Repositories\CanceledClassesRepository.cs" />
+    <Compile Include="Services\Repositories\StandingsRepository.cs" />
+    <Compile Include="Services\Repositories\ContactInfosRepository.cs" />
+    <Compile Include="Services\Repositories\PaymentsRepository.cs" />
+    <Compile Include="Services\Repositories\RanksRepository.cs" />
+    <Compile Include="Services\Repositories\AttendanceRecordsRepository.cs" />
+    <Compile Include="Services\Repositories\SchoolsRepository.cs" />
+    <Compile Include="Services\Repositories\ClassesRepository.cs" />
+    <Compile Include="Services\Repositories\ProfilesRepository.cs" />
+    <Compile Include="Services\Repositories\UsersRepository.cs" />
+    <Compile Include="Services\RepositoryFactory.cs" />
+    <Compile Include="Services\RepositoryProvider.cs" />
+    <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\domain\Data\Data.csproj">
       <Project>{e5d93237-caf6-42e9-8cfb-7534ecf1aa8e}</Project>
       <Name>Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\domain\Model\Model.csproj">
+      <Project>{2b3abf48-c4ee-4465-830c-c9e16f8c63d6}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

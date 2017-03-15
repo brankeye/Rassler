@@ -23,7 +23,7 @@ namespace rassler.frontend.core.Phone.ViewModels.Pages
             PageManager.PresentPage(navigationInfo);
         }
 
-        private IList<DashboardItem> CreateDashboardItems()
+        private IEnumerable<DashboardItem> CreateDashboardItems()
         {
             var dashboardItems = new List<DashboardItem>
             {
@@ -46,7 +46,7 @@ namespace rassler.frontend.core.Phone.ViewModels.Pages
             return dashboardItems;
         }
 
-        public IList<DashboardItem> DashboardItems { get; set; }
+        public IEnumerable<DashboardItem> DashboardItems { get; set; }
 
         public IMasterDetailPageManager PageManager { get; set; }
     }
